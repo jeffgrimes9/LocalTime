@@ -12,6 +12,7 @@
 
 @interface ViewController : UIViewController <MKMapViewDelegate, TimezoneProtocol>
 
+@property (nonatomic, retain) IBOutlet UIActivityIndicatorView *spinner;
 @property (nonatomic, retain) APIWrapper *apiWrapper;
 @property (nonatomic, retain) IBOutlet MKMapView *mapView;
 @property (nonatomic, retain) IBOutlet UILabel *centerCoordinatesLabel;

@@ -29,11 +29,11 @@ const int textTag = 1001;
                                          initWithTarget:self action:@selector(mapTapped:)];
     [self.mapView addGestureRecognizer:mapTapper];
     [mapTapper release];
-
 }
 
 - (IBAction)mapTapped:(id)sender {
     // user touched the map
+    [self.spinner startAnimating];
     CGPoint point = [sender locationInView:self.mapView];
     self.touchPoint = point;
     CLLocationCoordinate2D pointCoord = [self.mapView convertPoint:point toCoordinateFromView:self.mapView];
@@ -59,7 +59,7 @@ const int textTag = 1001;
     textLabel.backgroundColor = [UIColor clearColor];
     textLabel.textColor = [UIColor whiteColor];
     textLabel.textAlignment = NSTextAlignmentCenter;
-    textLabel.font = [UIFont fontWithName:@"Gill Sans" size:17];
+    textLabel.font = [UIFont fontWithName:@"Gill Sans" size:16];
     textLabel.text = string;
     
     float stubOffset = popupHeight*stubRatio + vertPadding;
@@ -89,10 +89,14 @@ const int textTag = 1001;
     [textLabel release];
 }
 
-- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
-    // user swiped or pinched
+- (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {
+    // user started a double-click, swipe, or pinch
     [[self.view viewWithTag:popupTag] removeFromSuperview];
     [[self.view viewWithTag:textTag] removeFromSuperview];
+}
+
+- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
+    // user ended a double-click, swipe, or pinch
     float lat = self.mapView.region.center.latitude;
     float lon = self.mapView.region.center.longitude;
     self.centerCoordinatesLabel.text = [NSString stringWithFormat:@"Center Coordinates: (%.2f, %.2f)", lat, lon];
@@ -100,6 +104,7 @@ const int textTag = 1001;
 
 - (void)gotTimezone {
     // get the timezone from the api response
+    [self.spinner stopAnimating];
     NSString *timezoneName = [[[[self.apiWrapper.responseDict objectForKey:@"data"] objectAtIndex:0] objectForKey:@"TimeZone"] objectForKey:@"TimeZoneId"];
     NSTimeZone *timezone = [NSTimeZone timeZoneWithName:timezoneName];
     
