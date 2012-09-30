@@ -7,7 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MapKit/MapKit.h>
+#import "APIWrapper.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <MKMapViewDelegate, TimezoneProtocol>
+
+@property (nonatomic, retain) APIWrapper *apiWrapper;
+@property (nonatomic, retain) IBOutlet MKMapView *mapView;
+@property (nonatomic, retain) IBOutlet UILabel *centerCoordinatesLabel;
+@property (nonatomic, retain) IBOutlet UIImageView *whiteHeader;
 
 @end
